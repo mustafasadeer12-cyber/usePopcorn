@@ -87,6 +87,7 @@ function Logo() {
         </div>
 }
 
+
 function Search() {
   const [query, setQuery] = useState("");
   return <input
@@ -100,15 +101,7 @@ function Search() {
 
 
 function Main() {
-    
-    
-    
-  
-
-  
-
   return <main className="main">
-       
         <ListBox />
         <WatchedBox />
           
@@ -119,8 +112,7 @@ function Main() {
 
 function ListBox() {
   const [isOpen1, setIsOpen1] = useState(true);
-  const [movies, setMovies] = useState(tempMovieData);
-
+  
   return  <div className="box">
           <button                                  
             className="btn-toggle"
@@ -129,10 +121,23 @@ function ListBox() {
             {isOpen1 ? "–" : "+"}
           </button> 
            
-          {isOpen1 && (
-            <ul className="list"> 
+          {isOpen1 && <MovieList />}
+        </div>               
+}
+
+
+function MovieList() {
+  const [movies, setMovies] = useState(tempMovieData)
+
+  return <ul className="list"> 
               {movies?.map((movie) => (
-                <li key={movie.imdbID}>
+                <Movie movie={movie} key={movie.imdbID}/>
+              ))} 
+            </ul>
+}
+
+function Movie({ movie }) {
+  return <li >
                   <img src={movie.Poster} alt={`${movie.Title} poster`} />       
                   <h3>{movie.Title}</h3>
                   <div>
@@ -142,22 +147,11 @@ function ListBox() {
                     </p>
                   </div>
                 </li>
-              ))} 
-            </ul>
-          )}
-        </div>               
 }
-
-
-
 
 function WatchedBox() {
   const [isOpen2, setIsOpen2] = useState(true);
   const [watched, setWatched] = useState(tempWatchedData);
-
-  const avgImdbRating = average(watched.map((movie) => movie.imdbRating));
-  const avgUserRating = average(watched.map((movie) => movie.userRating));
-  const avgRuntime = average(watched.map((movie) => movie.runtime));
 
   return <div className="box">
           <button
@@ -168,7 +162,21 @@ function WatchedBox() {
           </button>
           {isOpen2 && (
             <>
-              <div className="summary">
+              <WatchedSummary watched={watched} />
+              <WatchedMoviesList watched={watched} />
+             
+            </>
+          )}
+        </div>
+}
+
+
+function WatchedSummary({ watched }) {
+  const avgImdbRating = average(watched.map((movie) => movie.imdbRating));
+  const avgUserRating = average(watched.map((movie) => movie.userRating));
+  const avgRuntime = average(watched.map((movie) => movie.runtime));
+
+  return <div className="summary">
                 <h2>Movies you watched</h2>
                 <div>
                   <p>
@@ -189,8 +197,11 @@ function WatchedBox() {
                   </p>
                 </div>
               </div>
+}
 
-              <ul className="list">
+
+function WatchedMoviesList({ watched }) {
+  return  <ul className="list">
                 {watched.map((movie) => (
                   <li key={movie.imdbID}>
                     <img src={movie.Poster} alt={`${movie.Title} poster`} />
@@ -212,7 +223,4 @@ function WatchedBox() {
                   </li>
                 ))}
               </ul>
-            </>
-          )}
-        </div>
 }
