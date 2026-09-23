@@ -53,29 +53,28 @@ const average = (arr) =>
 
 
 export default function App() {
-  
+  const [movies, setMovies] = useState(tempMovieData)
   return (
     <>
-    <NavBar />
-    <Main />
+    <NavBar movies={movies}><Logo />
+        <Search />
+        <NumResults movies={movies}/> </NavBar>
+    <Main movies={movies}/>
     
 
     </>
   );
 }
 
-function NavBar() {
-  
+function NavBar({ children }) {
   return <nav className="nav-bar">
-        <Logo />
-        <Search />
-        <NumResults />
+        {children}
       </nav>
 }
 
-function NumResults() {
+function NumResults({ movies }) {
   return <p className="num-results">
-          Found <strong>X</strong> results
+          Found <strong>{movies.length}</strong> results
         </p>
 }
 
@@ -100,9 +99,9 @@ function Search() {
 }
 
 
-function Main() {
+function Main({ movies }) {
   return <main className="main">
-        <ListBox />
+        <ListBox movies={movies}/>
         <WatchedBox />
           
       </main>
@@ -110,7 +109,7 @@ function Main() {
 
 
 
-function ListBox() {
+function ListBox({movies}) {
   const [isOpen1, setIsOpen1] = useState(true);
   
   return  <div className="box">
@@ -121,13 +120,14 @@ function ListBox() {
             {isOpen1 ? "–" : "+"}
           </button> 
            
-          {isOpen1 && <MovieList />}
+          {isOpen1 && <MovieList movies={movies}/>}
         </div>               
 }
 
 
-function MovieList() {
-  const [movies, setMovies] = useState(tempMovieData)
+
+function MovieList({movies}) {
+  
 
   return <ul className="list"> 
               {movies?.map((movie) => (
@@ -203,24 +203,31 @@ function WatchedSummary({ watched }) {
 function WatchedMoviesList({ watched }) {
   return  <ul className="list">
                 {watched.map((movie) => (
-                  <li key={movie.imdbID}>
-                    <img src={movie.Poster} alt={`${movie.Title} poster`} />
-                    <h3>{movie.Title}</h3>
-                    <div>
-                      <p>
-                        <span>⭐️</span>
-                        <span>{movie.imdbRating}</span>
-                      </p>
-                      <p>
-                        <span>🌟</span>
-                        <span>{movie.userRating}</span>
-                      </p>
-                      <p>
-                        <span>⏳</span>
-                        <span>{movie.runtime} min</span>
-                      </p>
-                    </div>
-                  </li>
+                  <WatchedMovie movie={movie} key={movie.imdbID}/>
                 ))}
               </ul>
 }
+
+
+function WatchedMovie({ movie }) {
+  return <li>
+          <img src={movie.Poster} alt={`${movie.Title} poster`} />
+            <h3>{movie.Title}</h3>
+              <div>
+                <p>
+                  <span>⭐️</span>
+                  <span>{movie.imdbRating}</span>
+                   </p>
+                      <p>
+                        <span>🌟</span>
+                        <span>{movie.userRating}</span>
+                        </p>
+                      <p>
+                        <span>⏳</span>
+                        <span>{movie.runtime} min</span>
+                        </p>
+                    </div>
+                  </li>
+}
+
+
