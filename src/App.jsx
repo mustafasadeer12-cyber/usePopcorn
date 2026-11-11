@@ -98,6 +98,7 @@ function handleCloseMovie() {
           selectedId={selectedId}
           onCloseMovie={handleCloseMovie}
           onAddWatched={handleAddWacthed}
+          watched={watched}
           /> ) 
           : ( 
             <>
@@ -229,7 +230,7 @@ function Movie({ movie, onSelectMovie }) {
 
 
 
-function MovieDetails({ selectedId, onCloseMovie, onAddWatched}) {
+function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
   const [movie, setMovie] = useState({})
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
