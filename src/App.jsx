@@ -236,6 +236,10 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
   const [error, setError] = useState("")
   const [userRating, setUserRating] = useState('')
 
+  const isWatched = watched.map((movie) => movie.imdbID).
+  includes(selectedId);
+
+
   const { Title: title,
      Year: year, 
      Poster: poster, 
@@ -298,7 +302,9 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
     </header>
     <section>
       <div className="rating">
-        <StarRating 
+       { !isWatched ? 
+       <>
+       <StarRating 
         size={24} 
         maxRating={10}
         onSetRating={setUserRating}
@@ -309,8 +315,8 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
         onClick={handleAdd}> 
           + Add to list
           </button>
-        )}
-      </div>
+        )} </> : null}
+        </div>
       
 
       <em>{plot}</em>
