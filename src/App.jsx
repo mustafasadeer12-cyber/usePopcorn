@@ -185,10 +185,10 @@ function Box({ children }) {
             className="btn-toggle"
             onClick={() => setIsOpen((open) => !open)}
           >
-            {isOpen ? "–" : "+"}
+            { isOpen ? "–" : "+" }
           </button> 
            
-          {isOpen && children }
+          { isOpen && children }
         </div>               
 }
 
@@ -279,6 +279,7 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
         if (!res.ok) throw new Error ('Could not load movie details')
         const data = await res.json()
         setMovie(data)
+        console.log(data)
         setIsLoading(false)
      } catch(err) {
       setError(err.message)
@@ -289,7 +290,10 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
      getMovieDetails()
   }, [selectedId])
 
-  
+  useEffect(function() {
+    if (!title) return;
+    document.title = `Movie | ${title}`
+  }, [title])
 
   return <div className="details">
     { isLoading ? <Loader /> : (
@@ -340,9 +344,12 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
 
 
 function WatchedSummary({ watched }) {
-  const avgImdbRating = average(watched.map((movie) => movie.imdbRating));
-  const avgUserRating = average(watched.map((movie) => movie.userRating));
-  const avgRuntime = average(watched.map((movie) => movie.runtime));
+  // Keep only real numbers, so one "N/A" movie doesn't poison the average
+const valid = (arr) => arr.filter((n) => Number.isFinite(n));
+const avgImdbRating = average(valid(watched.map((movie) => movie.imdbRating)));
+const avgUserRating = average(valid(watched.map((movie) => movie.userRating)));
+const avgRuntime = average(valid(watched.map((movie) => movie.runtime)));
+
 
   return <div className="summary">
                 <h2>Movies you watched</h2>
@@ -357,7 +364,7 @@ function WatchedSummary({ watched }) {
                   </p>
                   <p>
                     <span>🌟</span>
-                    <span>{avgUserRating}</span>
+                    <span>{avgUserRating.toFixed(1)}</span>
                   </p>
                   <p>
                     <span>⏳</span>
